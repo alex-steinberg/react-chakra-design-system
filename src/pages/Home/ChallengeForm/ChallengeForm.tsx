@@ -121,7 +121,8 @@ const ChallengeForm: FC<{
       onClose={onClose}
       size={{
         base: "full",
-        md: "xl",
+        md: "lg",
+        lg: "xl",
       }}
       placement={placement as any}
     >
