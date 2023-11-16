@@ -1,8 +1,9 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useRef, useState } from "react";
 import {
   Button,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
@@ -14,7 +15,6 @@ import {
   VStack,
   useBreakpointValue,
   useRadioGroup,
-  useTheme,
 } from "@chakra-ui/react";
 
 import { RadioUIProps } from "../../../models/forms";
@@ -31,7 +31,14 @@ const ChallengeForm: FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
-  const theme = useTheme();
+  const [name, setName] = useState("");
+  const [dob, setDob] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [customerId, setCustomerId] = useState("");
+
+  const showCloseButton = useBreakpointValue({ base: true, md: false });
+
   const placement = useBreakpointValue(
     { base: "bottom", md: "right" },
     { ssr: false },
@@ -41,15 +48,18 @@ const ChallengeForm: FC<{
   const {
     getRootProps: getGenderRootProps,
     getRadioProps: getGenderRadioProps,
+    setValue: setGenderValue,
   } = useRadioGroup({
     name: "gender",
     defaultValue: "male",
   });
 
-  // Membership Radio Group
+  const genderGroup = getGenderRootProps();
+
   const {
     getRootProps: getMembershipRootProps,
     getRadioProps: getMembershipRadioProps,
+    setValue: setMembershipValue,
   } = useRadioGroup({
     name: "membership",
     defaultValue: "classic",
@@ -91,6 +101,19 @@ const ChallengeForm: FC<{
     },
   ];
 
+  const handleReset = () => {
+    // Reset input fields
+    setName("");
+    setDob("");
+    setEmail("");
+    setMobile("");
+    setCustomerId("");
+
+    // Reset radio groups
+    setGenderValue("male");
+    setMembershipValue("classic");
+  };
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -104,6 +127,7 @@ const ChallengeForm: FC<{
     >
       <DrawerOverlay />
       <DrawerContent backgroundColor="white.100">
+        {showCloseButton && <DrawerCloseButton />}
         <DrawerBody p={{ base: "4", md: "8", lg: "14" }}>
           <Stack spacing="6">
             <Stack direction={{ base: "column", md: "row" }}>
@@ -112,12 +136,14 @@ const ChallengeForm: FC<{
                 ref={firstField}
                 id="name"
                 placeholder="Please enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </Stack>
 
             <Stack direction={{ base: "column", md: "row" }}>
               <FormLabel htmlFor="gender">Gender</FormLabel>
-              <HStack {...getGenderRootProps()}>
+              <HStack {...genderGroup}>
                 {genderRadio.map((props) => {
                   return (
                     <CustomRadio
@@ -138,6 +164,8 @@ const ChallengeForm: FC<{
                 type="date"
                 id="dob"
                 placeholder="Please enter your date of birth"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
               />
             </Stack>
 
@@ -164,6 +192,8 @@ const ChallengeForm: FC<{
                   placeholder="Please enter your email"
                   isInvalid
                   errorBorderColor="accent.500"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <Text
                   fontSize="sm"
@@ -182,6 +212,8 @@ const ChallengeForm: FC<{
                 type="tel"
                 id="mobile"
                 placeholder="Please enter your mobile number"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
               />
             </Stack>
 
@@ -190,20 +222,22 @@ const ChallengeForm: FC<{
               <Input
                 id="customerId"
                 placeholder="Please enter your customer ID"
+                value={customerId}
+                onChange={(e) => setCustomerId(e.target.value)}
               />
             </Stack>
 
             <Stack direction={{ base: "column", md: "row" }}>
-              <FormLabel htmlFor="gender">Membership</FormLabel>
+              <FormLabel htmlFor="membership">Membership</FormLabel>
               <Stack
                 direction={{ base: "column", md: "row" }}
-                {...getGenderRootProps()}
+                {...getMembershipRootProps()}
               >
                 {membershipRadio.map((props) => {
                   return (
                     <CustomRadio
                       key={props.name}
-                      {...getGenderRadioProps({ value: props.name })}
+                      {...getMembershipRadioProps({ value: props.name })}
                       {...props}
                     >
                       {props.display}
@@ -222,8 +256,8 @@ const ChallengeForm: FC<{
             w="100%"
             justifyContent="flex-end"
           >
-            <Button variant="outline" onClick={onClose}>
-              Cancel
+            <Button variant="outline" onClick={handleReset}>
+              Clear
             </Button>
             <Button>Save</Button>
           </Stack>
