@@ -8,7 +8,7 @@ import ChallengeBlurb from "./ChallengeBlurb/ChallengeBlurb";
 import ChallengeForm from "./ChallengeForm/ChallengeForm";
 
 const Home: FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box display="flex" flexFlow={{ base: "column nowrap", md: "row nowrap" }}>
