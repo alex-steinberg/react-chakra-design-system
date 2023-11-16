@@ -37,7 +37,7 @@ const ChallengeForm: FC<{
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
 
-  const showCloseButton = useBreakpointValue({ base: true, lg: false });
+  const showCloseButton = useBreakpointValue({ base: true, md: false });
 
   const placement = useBreakpointValue(
     { base: "bottom", md: "right" },
