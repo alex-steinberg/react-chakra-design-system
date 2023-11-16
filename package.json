@@ -42,5 +42,5 @@
     "vite": "^4.4.5",
     "vitest": "^0.34.6"
   },
-  "engines": { "node": "16.x" }
+  "engines": { "node": "18.x" }
 }
